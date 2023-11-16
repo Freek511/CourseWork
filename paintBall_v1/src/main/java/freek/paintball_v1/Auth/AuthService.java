@@ -1,7 +1,6 @@
 package freek.paintball_v1.Auth;
 
 import freek.paintball_v1.Config.JwtService;
-import freek.paintball_v1.Entity.Role;
 import freek.paintball_v1.Entity.User;
 import freek.paintball_v1.Repo.UserRepo;
 import lombok.RequiredArgsConstructor;
