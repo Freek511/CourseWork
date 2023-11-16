@@ -1,5 +1,6 @@
 package freek.paintball_v1.Controller;
 
+import freek.paintball_v1.DAO.PlaygroundUpdateRequest;
 import freek.paintball_v1.Entity.Playground;
 import freek.paintball_v1.Repo.PlaygroundRepo;
 import org.springframework.http.HttpStatusCode;
@@ -23,30 +24,35 @@ public class PlaygroundController {
     }
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    public Playground getPlaygroundById(@PathVariable int id){
+    public Object getPlaygroundById(@PathVariable int id){
+        if(playgroundRepo.findById(id).isEmpty()) {
+            return new ResponseEntity<>("Invalid id", HttpStatusCode.valueOf(400));
+        }
         return playgroundRepo.findById(id).get();
     }
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> createPlayground(@RequestBody Playground playground){
+        if(playgroundRepo.findByName(playground.getName()).isPresent()) {
+            return new ResponseEntity<>("Playground already exists", HttpStatusCode.valueOf(400));
+        }
         playgroundRepo.saveAndFlush(playground);
         return new ResponseEntity<>("Successfully added", HttpStatusCode.valueOf(201));
     }
 
     @PutMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> updatePlayground(@RequestBody Playground playground){
+    public ResponseEntity<String> updatePlayground(@RequestBody PlaygroundUpdateRequest updateRequest){
 
-        if(!playgroundRepo.existsById(playground.getPg_ID()))
-        {
+        if(!playgroundRepo.existsById(updateRequest.getId())) {
             return new ResponseEntity<>("No such element in database", HttpStatusCode.valueOf(400));
         }
-        Playground oldPlayground = playgroundRepo.getReferenceById(playground.getPg_ID());
-        oldPlayground.setPg_Area(playground.getPg_Area());
-        oldPlayground.setPg_Description(playground.getPg_Description());
-        oldPlayground.setPg_Name(playground.getPg_Name());
-        oldPlayground.setPg_Capacity(playground.getPg_Capacity());
-        oldPlayground.setPg_Price(playground.getPg_Price());
+        Playground oldPlayground = playgroundRepo.getReferenceById(updateRequest.getId());
+        oldPlayground.setArea(updateRequest.getArea());
+        oldPlayground.setDescription(updateRequest.getDescription());
+        oldPlayground.setCapacity(updateRequest.getCapacity());
+        oldPlayground.setPrice(updateRequest.getPrice());
+
         playgroundRepo.saveAndFlush(oldPlayground);
         return new ResponseEntity<>("Successfully updated", HttpStatusCode.valueOf(200));
     }
