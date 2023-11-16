@@ -12,11 +12,11 @@ import lombok.*;
 public class Playground {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int pg_ID;
+    private int id;
 
-    private String pg_Name;
-    private String pg_Description;
-    private int pg_Price;
-    private int pg_Area;
-    private int pg_Capacity;
+    private String name;
+    private String description;
+    private int price;
+    private int area;
+    private int capacity;
 }
