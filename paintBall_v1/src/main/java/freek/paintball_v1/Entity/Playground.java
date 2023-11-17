@@ -1,5 +1,6 @@
 package freek.paintball_v1.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +24,6 @@ public class Playground {
     private int area;
     private int capacity;
     @OneToMany(mappedBy = "playground", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Orders> ordersList = new ArrayList<>();
 }

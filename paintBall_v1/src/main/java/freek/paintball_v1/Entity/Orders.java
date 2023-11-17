@@ -1,5 +1,6 @@
 package freek.paintball_v1.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,9 +17,11 @@ public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private String date;
+    private String orderDate;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Playground playground;
 }
