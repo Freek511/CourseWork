@@ -1,4 +1,4 @@
-package freek.paintball_v1.DAO;
+package freek.paintball_v1.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

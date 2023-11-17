@@ -1,6 +1,6 @@
 package freek.paintball_v1.Controller;
 
-import freek.paintball_v1.DAO.PlaygroundUpdateRequest;
+import freek.paintball_v1.DTO.PlaygroundUpdateRequest;
 import freek.paintball_v1.Entity.Playground;
 import freek.paintball_v1.Repo.PlaygroundRepo;
 import org.springframework.http.HttpStatusCode;
