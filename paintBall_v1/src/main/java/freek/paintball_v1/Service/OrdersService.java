@@ -51,8 +51,17 @@ public class OrdersService {
 
         return new ResponseEntity<>("Order is created", HttpStatusCode.valueOf(201));
     }
-    public ResponseEntity<String> deleteFromOrders(){
-        return null;
+    public ResponseEntity<String> deleteOrderByUser(HttpServletRequest request, int id){
+        final String authHeader = request.getHeader("Authorization");
+        String jwt = authHeader.substring(7);
+        String userEmail = jwtService.extractUsername(jwt);
+        User user = userRepo.findFirstByEmail(userEmail);
+        if (user.getId() != ordersRepo.getUserIdById(id))
+        {
+            return new ResponseEntity<>("You are not owner of this order", HttpStatusCode.valueOf(400));
+        }
+        ordersRepo.deleteById(id);
+        return new ResponseEntity<>("Successfully deleted from your orders", HttpStatusCode.valueOf(200));
     }
     public Iterable<Orders> getAll(){
         return ordersRepo.findAll();

@@ -23,6 +23,15 @@ public class OrderController {
         return ordersService.createOrder(request, orderRequest);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteOrderByUser(
+            @PathVariable int id,
+            @NonNull HttpServletRequest request
+            )
+    {
+        return ordersService.deleteOrderByUser(request, id);
+    }
+
     @GetMapping("/all")
     public Iterable<Orders> getAllOrders(){
         return ordersService.getAll();
