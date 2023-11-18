@@ -18,6 +18,12 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterRequest request) {
+        String jwt = null;
+        if(userRepo.findByEmail(request.getEmail()).isPresent()){
+            return AuthResponse.builder()
+                    .token(jwt)
+                    .build();
+        }
         var user = User.builder()
                 .email(request.getEmail())
                 .login(request.getLogin())
@@ -25,7 +31,7 @@ public class AuthService {
                 .role(request.getRole())
                 .build();
         userRepo.save(user);
-        var jwt = jwtService.generateToken(user);
+        jwt = jwtService.generateToken(user);
         return AuthResponse.builder()
                 .token(jwt)
                 .build();
