@@ -100,6 +100,11 @@ public class OrdersService {
     public ResponseEntity<String> updateOrderByUser(HttpServletRequest request,
                                                     OrderUpdateRequest orderUpdateRequest){
         var user = getUser(request);
+        if(!ordersRepo.existsById(orderUpdateRequest.getId())){
+            return new ResponseEntity<>(
+                    "Error! Incorrect order id",
+                    HttpStatusCode.valueOf(400));
+        }
         if(user.getId() != ordersRepo.getUserIdById(orderUpdateRequest.getId()) ){
             return new ResponseEntity<>(
                     "Error! You are not owner of this order",
