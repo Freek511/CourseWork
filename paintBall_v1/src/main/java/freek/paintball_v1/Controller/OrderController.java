@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     private final OrdersService ordersService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<String> createOrder(
             @NonNull HttpServletRequest request,
             @RequestBody CreateOrderRequest orderRequest)
@@ -23,7 +24,7 @@ public class OrderController {
         return ordersService.createOrder(request, orderRequest);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteOrderByUser(
             @PathVariable int id,
             @NonNull HttpServletRequest request
@@ -32,8 +33,21 @@ public class OrderController {
         return ordersService.deleteOrderByUser(request, id);
     }
 
-    @GetMapping("/all")
+    @DeleteMapping("/delete-hard/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> deleteOrderByAdmin(@PathVariable int id)
+    {
+        return ordersService.deleteOrderByAdmin(id);
+    }
+
+    @GetMapping("/admin/all")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Iterable<Orders> getAllOrders(){
         return ordersService.getAll();
+    }
+
+    @GetMapping("/all")
+    public Iterable<Orders> getAllOrdersForUser(@NonNull HttpServletRequest request){
+        return ordersService.getAllOrdersForUser(request);
     }
 }
