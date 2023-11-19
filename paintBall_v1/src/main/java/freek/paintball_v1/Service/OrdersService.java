@@ -8,11 +8,12 @@ import freek.paintball_v1.Repo.OrdersRepo;
 import freek.paintball_v1.Repo.PlaygroundRepo;
 import freek.paintball_v1.Repo.UserRepo;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,14 +24,18 @@ public class OrdersService {
     private final PlaygroundRepo playgroundRepo;
     private final UserRepo userRepo;
 
-    public ResponseEntity<String> createOrder(
-            @NonNull HttpServletRequest request,
-            CreateOrderRequest orderRequest
-    ){
+    private User getUser(HttpServletRequest request){
         final String authHeader = request.getHeader("Authorization");
         String jwt = authHeader.substring(7);
         String userEmail = jwtService.extractUsername(jwt);
-        User user = userRepo.findFirstByEmail(userEmail);
+        return userRepo.findFirstByEmail(userEmail);
+    }
+
+    public ResponseEntity<String> createOrder(
+            HttpServletRequest request,
+            CreateOrderRequest orderRequest)
+    {
+        var user = getUser(request);
         int playground_id = orderRequest.getPlayground_id();
         String date = orderRequest.getOrderDate();
 
@@ -52,10 +57,7 @@ public class OrdersService {
         return new ResponseEntity<>("Order is created", HttpStatusCode.valueOf(201));
     }
     public ResponseEntity<String> deleteOrderByUser(HttpServletRequest request, int id){
-        final String authHeader = request.getHeader("Authorization");
-        String jwt = authHeader.substring(7);
-        String userEmail = jwtService.extractUsername(jwt);
-        User user = userRepo.findFirstByEmail(userEmail);
+        var user = getUser(request);
         if (user.getId() != ordersRepo.getUserIdById(id))
         {
             return new ResponseEntity<>("You are not owner of this order", HttpStatusCode.valueOf(400));
@@ -63,11 +65,16 @@ public class OrdersService {
         ordersRepo.deleteById(id);
         return new ResponseEntity<>("Successfully deleted from your orders", HttpStatusCode.valueOf(200));
     }
-    public Iterable<Orders> getAll(){
+    public ResponseEntity<String> deleteOrderByAdmin(int id){
+        ordersRepo.deleteById(id);
+        return ResponseEntity.ok("Successfully deleted from all orders");
+    }
+    public List<Orders> getAll(){
         return ordersRepo.findAll();
     }
-    public Iterable<Orders> getAllOrdersForUser(){
-        return null;
+    public List<Orders> getAllOrdersForUser(HttpServletRequest request){
+        var user = getUser(request);
+        return ordersRepo.findAllByUserId(user.getId());
     }
 
     public boolean acceptOrder(){
