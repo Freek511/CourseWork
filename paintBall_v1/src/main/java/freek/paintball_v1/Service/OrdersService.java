@@ -2,6 +2,7 @@ package freek.paintball_v1.Service;
 
 import freek.paintball_v1.Config.JwtService;
 import freek.paintball_v1.DTO.CreateOrderRequest;
+import freek.paintball_v1.DTO.OrderUpdateRequest;
 import freek.paintball_v1.Entity.Orders;
 import freek.paintball_v1.Entity.User;
 import freek.paintball_v1.Repo.OrdersRepo;
@@ -75,6 +76,36 @@ public class OrdersService {
     public List<Orders> getAllOrdersForUser(HttpServletRequest request){
         var user = getUser(request);
         return ordersRepo.findAllByUserId(user.getId());
+    }
+
+    public ResponseEntity<String> updateOrderByAdmin(OrderUpdateRequest request){
+        if(!ordersRepo.existsById(request.getId())){
+            return new ResponseEntity<>(
+                    "Error! Incorrect order id",
+                    HttpStatusCode.valueOf(400));
+        }
+        Orders oldOrder = ordersRepo.getReferenceById(request.getId());
+        if(ordersRepo.findByDateAndPlaygroundId(request.getOrderDate(), oldOrder.getPlayground().getId()) != null){
+            return new ResponseEntity<>(
+                    "Error! Order with this date already exits!",
+                    HttpStatusCode.valueOf(400));
+        }
+        oldOrder.setOrderDate(request.getOrderDate());
+        ordersRepo.saveAndFlush(oldOrder);
+        return new ResponseEntity<>(
+                "Your order date was updated",
+                HttpStatusCode.valueOf(200));
+    }
+
+    public ResponseEntity<String> updateOrderByUser(HttpServletRequest request,
+                                                    OrderUpdateRequest orderUpdateRequest){
+        var user = getUser(request);
+        if(user.getId() != ordersRepo.getUserIdById(orderUpdateRequest.getId()) ){
+            return new ResponseEntity<>(
+                    "Error! You are not owner of this order",
+                    HttpStatusCode.valueOf(400));
+        }
+        return updateOrderByAdmin(orderUpdateRequest);
     }
 
     public boolean acceptOrder(){

@@ -15,5 +15,4 @@ public interface OrdersRepo extends JpaRepository <Orders, Integer> {
 
     @Query(value = "select * from _orders where user_id = ?1", nativeQuery = true)
     List<Orders> findAllByUserId(int user_id);
-
 }

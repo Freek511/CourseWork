@@ -1,6 +1,7 @@
 package freek.paintball_v1.Controller;
 
 import freek.paintball_v1.DTO.CreateOrderRequest;
+import freek.paintball_v1.DTO.OrderUpdateRequest;
 import freek.paintball_v1.Entity.Orders;
 import freek.paintball_v1.Service.OrdersService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,5 +50,16 @@ public class OrderController {
     @GetMapping("/all")
     public Iterable<Orders> getAllOrdersForUser(@NonNull HttpServletRequest request){
         return ordersService.getAllOrdersForUser(request);
+    }
+
+    @PutMapping("/update-hard")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> updateOrderByAdmin(@RequestBody OrderUpdateRequest request){
+        return ordersService.updateOrderByAdmin(request);
+    }
+    @PutMapping("/update")
+    public ResponseEntity<String> updateOrderByAdmin(@RequestBody OrderUpdateRequest updateRequest,
+                                                     @NonNull HttpServletRequest request ){
+        return ordersService.updateOrderByUser(request, updateRequest);
     }
 }
