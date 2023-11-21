@@ -2,6 +2,7 @@ package freek.paintball_v1.Service;
 
 import freek.paintball_v1.Config.JwtService;
 import freek.paintball_v1.DTO.CreateOrderRequest;
+import freek.paintball_v1.DTO.OrderResponse;
 import freek.paintball_v1.DTO.OrderUpdateRequest;
 import freek.paintball_v1.Entity.Orders;
 import freek.paintball_v1.Entity.User;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -70,12 +72,34 @@ public class OrdersService {
         ordersRepo.deleteById(id);
         return ResponseEntity.ok("Successfully deleted from all orders");
     }
-    public List<Orders> getAll(){
-        return ordersRepo.findAll();
+    public List<OrderResponse> getAll(){
+        List<OrderResponse> response = new ArrayList<>();
+        for (Orders order : ordersRepo.findAll())
+        {
+            OrderResponse temp = OrderResponse.builder()
+                    .id(order.getId())
+                    .orderDate(order.getOrderDate())
+                    .playground_id(order.getPlayground().getId())
+                    .user_id(order.getUser().getId())
+                    .build();
+            response.add(temp);
+        }
+
+        return response;
     }
-    public List<Orders> getAllOrdersForUser(HttpServletRequest request){
+    public List<OrderResponse> getAllOrdersForUser(HttpServletRequest request){
         var user = getUser(request);
-        return ordersRepo.findAllByUserId(user.getId());
+        List<OrderResponse> response = new ArrayList<>();
+        for(Orders order : ordersRepo.findAllByUserId(user.getId())){
+            OrderResponse temp = OrderResponse.builder()
+                    .id(order.getId())
+                    .orderDate(order.getOrderDate())
+                    .playground_id(order.getPlayground().getId())
+                    .user_id(order.getUser().getId())
+                    .build();
+            response.add(temp);
+        }
+        return response;
     }
 
     public ResponseEntity<String> updateOrderByAdmin(OrderUpdateRequest request){

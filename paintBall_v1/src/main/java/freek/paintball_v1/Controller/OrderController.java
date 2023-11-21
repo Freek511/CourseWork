@@ -1,8 +1,8 @@
 package freek.paintball_v1.Controller;
 
 import freek.paintball_v1.DTO.CreateOrderRequest;
+import freek.paintball_v1.DTO.OrderResponse;
 import freek.paintball_v1.DTO.OrderUpdateRequest;
-import freek.paintball_v1.Entity.Orders;
 import freek.paintball_v1.Service.OrdersService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -43,12 +45,12 @@ public class OrderController {
 
     @GetMapping("/admin/all")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Iterable<Orders> getAllOrders(){
+    public List<OrderResponse> getAllOrders(){
         return ordersService.getAll();
     }
 
     @GetMapping("/all")
-    public Iterable<Orders> getAllOrdersForUser(@NonNull HttpServletRequest request){
+    public List<OrderResponse> getAllOrdersForUser(@NonNull HttpServletRequest request){
         return ordersService.getAllOrdersForUser(request);
     }
 
