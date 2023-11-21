@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    restart: on-failure
+    environment:
+      - SERVER_PORT = 8080
+      - SPRING_DATASOURCE_URL = jdbc:postgresql://db/paintball
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./sql/db.sql:/docker-entrypoint-initdb.d/db.sql
+    restart: on-failure
