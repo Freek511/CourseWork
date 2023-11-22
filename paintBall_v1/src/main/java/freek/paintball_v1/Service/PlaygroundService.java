@@ -20,7 +20,7 @@ public class PlaygroundService {
         if(playgroundRepo.findById(id).isEmpty()) {
             return new ResponseEntity<>("Invalid id", HttpStatusCode.valueOf(400));
         }
-        return playgroundRepo.findById(id).get();
+        return playgroundRepo.getReferenceById(id);
     }
     public ResponseEntity<String> createPlayground(Playground playground){
         if(playgroundRepo.findByName(playground.getName()).isPresent()) {
