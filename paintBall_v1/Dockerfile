@@ -1,10 +1,10 @@
-FROM maven:3.8.4-openjdk-17 as builder
-WORKDIR /app
-COPY . /app/.
-RUN mvn -f /app/pom.xml clean package -Dmaven.test.skip=true
+#FROM maven:3.8.4-openjdk-17 as builder
+#WORKDIR /app
+#COPY . /app/.
+#RUN mvn -f /app/pom.xml clean package -Dmaven.test.skip=true
 
-FROM eclipse-temurin:17-jre-alpine
+FROM bellsoft/liberica-openjdk-alpine:18.0.2.1-1
 WORKDIR /app
-COPY --from=builder /app/target/*.jar /app/*.jar
+COPY target/paintBall_v1-0.0.1-SNAPSHOT.jar /app/paintBall_v1-0.0.1-SNAPSHOT.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/*.jar"]
+CMD ["java", "-jar", "paintBall_v1-0.0.1-SNAPSHOT.jar"]
