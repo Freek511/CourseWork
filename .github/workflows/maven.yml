@@ -28,7 +28,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Change directory
-      run: cd .\paintBall_v1\
+      run: cd paintBall_v1
     - name: Run Test
       run: mvn test
     - name: Build with Maven
