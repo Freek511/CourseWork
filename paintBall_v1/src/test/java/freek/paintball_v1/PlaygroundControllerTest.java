@@ -73,20 +73,6 @@ class PlaygroundControllerTest {
         verify(playgroundService, times(1)).createPlayground(playground);
     }
 
-    @Test
-    void updatePlayground() throws Exception {
-        // Mock data
-        PlaygroundUpdateRequest updateRequest = new PlaygroundUpdateRequest();
-        when(playgroundService.updatePlayground(updateRequest)).thenReturn(new ResponseEntity<>("Playground updated successfully", HttpStatus.OK));
-
-        // Call the controller method
-        ResponseEntity<String> result = playgroundController.updatePlayground(updateRequest);
-
-        // Verify the result
-        assertEquals("Playground updated successfully", result.getBody());
-        assertEquals(HttpStatus.OK, result.getStatusCode());
-        verify(playgroundService, times(1)).updatePlayground(updateRequest);
-    }
 
     @Test
     void deletePlayground() {

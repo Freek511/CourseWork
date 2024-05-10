@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class PlaygroundUpdateRequest {
-    private int id;
+    private String name;
     private String description;
     private int area;
     private int capacity;

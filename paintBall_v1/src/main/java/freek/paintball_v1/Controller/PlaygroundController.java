@@ -32,12 +32,12 @@ public class PlaygroundController {
        return playgroundService.createPlayground(playground);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> updatePlayground(@RequestBody PlaygroundUpdateRequest updateRequest){
-        return playgroundService.updatePlayground(updateRequest);
+    public ResponseEntity<String> updatePlayground(@PathVariable int id, @RequestBody PlaygroundUpdateRequest updateRequest){
+        return playgroundService.updatePlayground(id, updateRequest);
     }
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> deletePlayground(@PathVariable int id){
        return playgroundService.deletePlayground(id);
