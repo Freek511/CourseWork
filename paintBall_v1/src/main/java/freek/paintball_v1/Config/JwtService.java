@@ -29,7 +29,9 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails);
+        Map <String, Object> claims = new HashMap<>();
+        claims.put("cred", userDetails.getAuthorities());
+        return generateToken(claims, userDetails);
     }
 
     public String generateToken(
@@ -40,7 +42,6 @@ public class JwtService {
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
-                .setAudience(userDetails.getAuthorities().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 10000 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
