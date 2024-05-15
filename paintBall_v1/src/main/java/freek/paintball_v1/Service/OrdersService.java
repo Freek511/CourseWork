@@ -101,14 +101,13 @@ public class OrdersService {
         }
         return response;
     }
-
-    public ResponseEntity<String> updateOrderByAdmin(OrderUpdateRequest request){
-        if(!ordersRepo.existsById(request.getId())){
+    public ResponseEntity<String> updateOrder(OrderUpdateRequest request, int order_id){
+        if(!ordersRepo.existsById(order_id)){
             return new ResponseEntity<>(
                     "Error! Incorrect order id",
                     HttpStatusCode.valueOf(400));
         }
-        Orders oldOrder = ordersRepo.getReferenceById(request.getId());
+        Orders oldOrder = ordersRepo.getReferenceById(order_id);
         if(ordersRepo.findByDateAndPlaygroundId(request.getOrderDate(), oldOrder.getPlayground().getId()) != null){
             return new ResponseEntity<>(
                     "Error! Order with this date already exits!",
@@ -120,21 +119,25 @@ public class OrdersService {
                 "Your order date was updated",
                 HttpStatusCode.valueOf(200));
     }
-
-    public ResponseEntity<String> updateOrderByUser(HttpServletRequest request,
-                                                    OrderUpdateRequest orderUpdateRequest){
-        var user = getUser(request);
-        if(!ordersRepo.existsById(orderUpdateRequest.getId())){
-            return new ResponseEntity<>(
-                    "Error! Incorrect order id",
-                    HttpStatusCode.valueOf(400));
-        }
-        if(user.getId() != ordersRepo.getUserIdById(orderUpdateRequest.getId()) ){
-            return new ResponseEntity<>(
-                    "Error! You are not owner of this order",
-                    HttpStatusCode.valueOf(400));
-        }
-        return updateOrderByAdmin(orderUpdateRequest);
+//    public ResponseEntity<String> updateOrder(HttpServletRequest request,
+//                                                    OrderUpdateRequest orderUpdateRequest, int order_id){
+//        var user = getUser(request);
+//        if(!ordersRepo.existsById(order_id)){
+//            return new ResponseEntity<>(
+//                    "Error! Incorrect order id",
+//                    HttpStatusCode.valueOf(400));
+//        }
+//        if(user.getId() != ordersRepo.getUserIdById(order_id) ){
+//            return new ResponseEntity<>(
+//                    "Error! You are not owner of this order",
+//                    HttpStatusCode.valueOf(400));
+//        }
+//        return updateOrderByAdmin(orderUpdateRequest, order_id);
+//    }
+    public OrderResponse getOrderById(int order_id){
+        Orders order = ordersRepo.getReferenceById(order_id);
+        return new OrderResponse(order.getId(), order.getPlayground().getId(),
+                                                    order.getUser().getId(), order.getOrderDate());
     }
 
     public boolean acceptOrder(){
