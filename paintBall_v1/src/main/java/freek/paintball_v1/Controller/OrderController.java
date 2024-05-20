@@ -37,7 +37,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/delete-hard/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<String> deleteOrderByAdmin(@PathVariable int id)
     {
         return ordersService.deleteOrderByAdmin(id);
