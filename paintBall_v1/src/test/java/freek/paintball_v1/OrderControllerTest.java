@@ -58,20 +58,20 @@ class OrderControllerTest {
         verify(ordersService, times(1)).getAll();
     }
 
-    @Test
-    void updateOrderByAdmin() {
-        // Mock data
-        OrderUpdateRequest request = new OrderUpdateRequest();
-        when(ordersService.updateOrderByAdmin(request)).thenReturn(new ResponseEntity<>("Order updated successfully", HttpStatus.OK));
-
-        // Call the controller method
-        ResponseEntity<String> result = orderController.updateOrderByAdmin(request);
-
-        // Verify the result
-        assertEquals("Order updated successfully", result.getBody());
-        assertEquals(HttpStatus.OK, result.getStatusCode());
-        verify(ordersService, times(1)).updateOrderByAdmin(request);
-    }
+//    @Test
+//    void updateOrderByAdmin() {
+//        // Mock data
+//        OrderUpdateRequest request = new OrderUpdateRequest();
+//        when(ordersService.updateOrderByAdmin(request)).thenReturn(new ResponseEntity<>("Order updated successfully", HttpStatus.OK));
+//
+//        // Call the controller method
+//        ResponseEntity<String> result = orderController.updateOrderByAdmin(request);
+//
+//        // Verify the result
+//        assertEquals("Order updated successfully", result.getBody());
+//        assertEquals(HttpStatus.OK, result.getStatusCode());
+//        verify(ordersService, times(1)).updateOrderByAdmin(request);
+//    }
     @Test
     void createOrder() {
         // Mock data

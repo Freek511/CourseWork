@@ -37,7 +37,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/delete-hard/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<String> deleteOrderByAdmin(@PathVariable int id)
     {
         return ordersService.deleteOrderByAdmin(id);
@@ -53,15 +53,14 @@ public class OrderController {
     public List<OrderResponse> getAllOrdersForUser(@NonNull HttpServletRequest request){
         return ordersService.getAllOrdersForUser(request);
     }
-
-    @PutMapping("/update-hard")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> updateOrderByAdmin(@RequestBody OrderUpdateRequest request){
-        return ordersService.updateOrderByAdmin(request);
+    @GetMapping("/{id}")
+    public OrderResponse getAllOrdersForUser(@PathVariable int id){
+        return ordersService.getOrderById(id);
     }
-    @PutMapping("/update")
-    public ResponseEntity<String> updateOrderByAdmin(@RequestBody OrderUpdateRequest updateRequest,
-                                                     @NonNull HttpServletRequest request ){
-        return ordersService.updateOrderByUser(request, updateRequest);
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateOrder(@RequestBody OrderUpdateRequest updateRequest,
+                                                     @PathVariable int id){
+        return ordersService.updateOrder(updateRequest, id);
     }
 }

@@ -30,12 +30,13 @@ public class PlaygroundService {
         return new ResponseEntity<>("Successfully added", HttpStatusCode.valueOf(201));
     }
 
-    public ResponseEntity<String> updatePlayground( PlaygroundUpdateRequest updateRequest){
+    public ResponseEntity<String> updatePlayground(int id, PlaygroundUpdateRequest updateRequest){
 
-        if(!playgroundRepo.existsById(updateRequest.getId())) {
+        if(!playgroundRepo.existsById(id)) {
             return new ResponseEntity<>("No such element in database", HttpStatusCode.valueOf(400));
         }
-        Playground oldPlayground = playgroundRepo.getReferenceById(updateRequest.getId());
+        Playground oldPlayground = playgroundRepo.getReferenceById(id);
+        oldPlayground.setName(updateRequest.getName());
         oldPlayground.setArea(updateRequest.getArea());
         oldPlayground.setDescription(updateRequest.getDescription());
         oldPlayground.setCapacity(updateRequest.getCapacity());
